@@ -71,4 +71,42 @@ Metrics are calculated over valid pixels by summing true positives (TP), false p
 | **F1 score** | `2 × precision × recall / (precision + recall)` | Harmonic mean of precision and recall. |
 | **IoU (Jaccard)** | `TP / (TP + FP + FN)` | Overlap between predicted and reference water regions. |
 
-The notebook also evaluates thresholding baselines, U-Net variants, and a leave-India-out experiment. **Numerical F1, IoU, precision, and recall scores are not listed here** because trained checkpoints and generated experiment outputs are not included in this source-only repository. Run the training and evaluation notebook with the dataset to generate those results under `work/results/`.
+## Experimental results
+
+The following scores are taken from the project evaluation outputs supplied for this update. Values are shown as mean ± standard deviation across three seeds when available. The two Otsu baselines each use one run, so no standard deviation is available. Scores are computed over valid pixels; `india_all` is the held-out India evaluation for the leave-India-out experiment.
+
+| Experiment | Evaluation set | Seeds | IoU | F1 | Precision | Recall |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| e0_otsu_per_chip | test | 1 | 0.242 | 0.390 | 0.262 | 0.766 |
+| e0_otsu_per_chip | bolivia | 1 | 0.429 | 0.601 | 0.470 | 0.832 |
+| e0_otsu_per_chip | test_india | 1 | 0.390 | 0.561 | 0.414 | 0.873 |
+| e0_otsu_provided | test | 1 | 0.546 | 0.706 | 0.681 | 0.733 |
+| e0_otsu_provided | bolivia | 1 | 0.697 | 0.822 | 0.781 | 0.867 |
+| e0_otsu_provided | test_india | 1 | 0.704 | 0.827 | 0.880 | 0.779 |
+| e1_baseline | test | 3 | 0.665 ± 0.018 | 0.799 ± 0.013 | 0.805 ± 0.004 | 0.793 ± 0.028 |
+| e1_baseline | bolivia | 3 | 0.595 ± 0.051 | 0.745 ± 0.040 | 0.767 ± 0.018 | 0.725 ± 0.060 |
+| e1_baseline | test_india | 3 | 0.692 ± 0.036 | 0.817 ± 0.025 | 0.816 ± 0.014 | 0.820 ± 0.046 |
+| e2a_bce_only | test | 3 | 0.648 ± 0.012 | 0.786 ± 0.009 | 0.818 ± 0.002 | 0.758 ± 0.015 |
+| e2a_bce_only | bolivia | 3 | 0.608 ± 0.031 | 0.756 ± 0.024 | 0.780 ± 0.016 | 0.734 ± 0.038 |
+| e2a_bce_only | test_india | 3 | 0.657 ± 0.011 | 0.793 ± 0.008 | 0.827 ± 0.010 | 0.762 ± 0.014 |
+| e3_leave_india_out | india_all | 3 | 0.490 ± 0.011 | 0.658 ± 0.010 | 0.735 ± 0.026 | 0.596 ± 0.020 |
+| e3_leave_india_out | test | 3 | 0.649 ± 0.004 | 0.787 ± 0.003 | 0.822 ± 0.008 | 0.755 ± 0.012 |
+| e3_leave_india_out | bolivia | 3 | 0.584 ± 0.032 | 0.737 ± 0.026 | 0.775 ± 0.005 | 0.703 ± 0.043 |
+| e3_leave_india_out | test_india | 3 | 0.645 ± 0.005 | 0.784 ± 0.004 | 0.827 ± 0.006 | 0.745 ± 0.010 |
+| e5_final | test | 3 | 0.666 ± 0.004 | 0.799 ± 0.003 | 0.806 ± 0.006 | 0.793 ± 0.010 |
+| e5_final | bolivia | 3 | 0.625 ± 0.022 | 0.769 ± 0.016 | 0.782 ± 0.003 | 0.757 ± 0.030 |
+| e5_final | test_india | 3 | 0.673 ± 0.016 | 0.804 ± 0.012 | 0.827 ± 0.009 | 0.783 ± 0.019 |
+
+For the final three-seed experiment, the highest mean IoU is 0.673 ± 0.016 on `test_india`; on the `test` split, mean IoU is 0.666 ± 0.004 and mean F1 is 0.799 ± 0.003. The BCE-only experiment scores slightly lower test IoU (0.648 ± 0.012), while the three-seed baseline is 0.665 ± 0.018. The leave-India-out model obtains 0.490 ± 0.011 IoU on `india_all`, which reflects the more challenging held-out geography.
+
+The training plots supplied with these results show training loss decreasing over epochs while validation water IoU fluctuates around its best range. Validation IoU is used for checkpoint selection and early stopping; the test-set metrics above are the reported final evaluation.
+
+## Running the app
+
+Install dependencies from `requirements.txt`, provide the data and model assets listed above, then start the dashboard with:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Refer to the notebooks for dataset preparation, fixture recording, model training, and evaluation workflows.
