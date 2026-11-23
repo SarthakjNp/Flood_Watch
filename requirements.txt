@@ -1,0 +1,8 @@
+numpy
+pandas
+streamlit
+geopandas
+rasterio
+matplotlib
+torch
+segmentation-models-pytorch

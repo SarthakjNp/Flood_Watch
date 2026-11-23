@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+work/
+Data/sen1floods11_v1.1/
+Data/natural_earth/*.shp
+Data/natural_earth/*.shx
+Data/natural_earth/*.dbf
+Data/natural_earth/*.tif
+*.pt
+*.pth
+*.ckpt
+.env
